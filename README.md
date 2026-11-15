@@ -49,7 +49,7 @@ Fullstack веб-приложение для бронирования перег
 Нужен только [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
 ```bash
-git clone <ссылка на репозиторий>
+git clone https://github.com/andreipauli2006-png/mr meetspace
 cd meetspace
 docker compose up --build
 ```
