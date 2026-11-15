@@ -14,9 +14,9 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://meetspace.onrender.com
+        value: https://meetspace-xgyx.onrender.com
       - key: FRONTEND_URL
-        value: https://meetspace.onrender.com
+        value: https://meetspace-xgyx.onrender.com
 
 databases:
   - name: meetspace-db
