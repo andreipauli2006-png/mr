@@ -1,0 +1,2805 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "MeetSpace API",
+        "description": "Сервис бронирования переговорных и коворкингов",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Register",
+                "description": "Регистрация. Новый пользователь получает роль «гость».",
+                "operationId": "register_api_auth_register_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Login",
+                "operationId": "login_api_auth_login_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenPair"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Refresh",
+                "description": "Обмен refresh-токена на новую пару токенов (старый отзывается).",
+                "operationId": "refresh_api_auth_refresh_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenPair"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Logout",
+                "operationId": "logout_api_auth_logout_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Forgot Password",
+                "description": "Ссылка для сброса выводится в лог сервера (так разрешено ТЗ).",
+                "operationId": "forgot_password_api_auth_forgot_password_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ForgotPasswordIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Reset Password",
+                "operationId": "reset_password_api_auth_reset_password_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetPasswordIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/change-password": {
+            "post": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Change Password",
+                "operationId": "change_password_api_auth_change_password_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangePasswordIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/users/me": {
+            "get": {
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Me",
+                "operationId": "me_api_users_me_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Update Me",
+                "operationId": "update_me_api_users_me_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProfileUpdateIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/users/me/history": {
+            "get": {
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "My History",
+                "description": "История действий текущего пользователя (личный кабинет).",
+                "operationId": "my_history_api_users_me_history_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Size"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Page_AuditOut_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/users": {
+            "get": {
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "List Users",
+                "operationId": "list_users_api_admin_users_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "maxLength": 100
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Search"
+                        }
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/Role"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Role"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "email | full_name | created_at, с «-» — по убыванию",
+                            "title": "Sort"
+                        },
+                        "description": "email | full_name | created_at, с «-» — по убыванию"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Size"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Page_UserOut_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/users/{user_id}": {
+            "patch": {
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Update User",
+                "description": "Смена роли и блокировка пользователя.",
+                "operationId": "update_user_api_admin_users__user_id__patch",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminUserUpdateIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/audit": {
+            "get": {
+                "tags": [
+                    "Пользователи"
+                ],
+                "summary": "Audit Log",
+                "operationId": "audit_log_api_admin_audit_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Action"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "User Id"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Size"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Page_AuditOut_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/rooms": {
+            "get": {
+                "tags": [
+                    "Залы"
+                ],
+                "summary": "List Rooms",
+                "operationId": "list_rooms_api_rooms_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "maxLength": 100
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Search"
+                        }
+                    },
+                    {
+                        "name": "location_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Location Id"
+                        }
+                    },
+                    {
+                        "name": "min_capacity",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Min Capacity"
+                        }
+                    },
+                    {
+                        "name": "amenity_ids",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            },
+                            "default": [],
+                            "title": "Amenity Ids"
+                        }
+                    },
+                    {
+                        "name": "include_inactive",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Include Inactive"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "name | capacity | floor | created_at, «-» — по убыванию",
+                            "title": "Sort"
+                        },
+                        "description": "name | capacity | floor | created_at, «-» — по убыванию"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 12,
+                            "title": "Size"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Page_RoomOut_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Залы"
+                ],
+                "summary": "Create Room",
+                "operationId": "create_room_api_rooms_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RoomIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoomOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/rooms/{room_id}": {
+            "get": {
+                "tags": [
+                    "Залы"
+                ],
+                "summary": "Get Room",
+                "operationId": "get_room_api_rooms__room_id__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "room_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Room Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoomOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Залы"
+                ],
+                "summary": "Update Room",
+                "operationId": "update_room_api_rooms__room_id__put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "room_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Room Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RoomIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoomOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Залы"
+                ],
+                "summary": "Delete Room",
+                "operationId": "delete_room_api_rooms__room_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "room_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Room Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/rooms/{room_id}/slots": {
+            "get": {
+                "tags": [
+                    "Залы"
+                ],
+                "summary": "Room Slots",
+                "description": "Занятые интервалы зала на выбранный день — для календаря.",
+                "operationId": "room_slots_api_rooms__room_id__slots_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "room_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Room Id"
+                        }
+                    },
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Day"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SlotOut"
+                                    },
+                                    "title": "Response Room Slots Api Rooms  Room Id  Slots Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/rooms/{room_id}/photos": {
+            "post": {
+                "tags": [
+                    "Залы"
+                ],
+                "summary": "Upload Photo",
+                "operationId": "upload_photo_api_rooms__room_id__photos_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "room_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Room Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_upload_photo_api_rooms__room_id__photos_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoomPhotoOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/rooms/{room_id}/photos/{photo_id}": {
+            "delete": {
+                "tags": [
+                    "Залы"
+                ],
+                "summary": "Delete Photo",
+                "operationId": "delete_photo_api_rooms__room_id__photos__photo_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "room_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Room Id"
+                        }
+                    },
+                    {
+                        "name": "photo_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Photo Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/locations": {
+            "get": {
+                "tags": [
+                    "Залы",
+                    "Справочники"
+                ],
+                "summary": "List Locations",
+                "operationId": "list_locations_api_locations_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/LocationOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response List Locations Api Locations Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Залы",
+                    "Справочники"
+                ],
+                "summary": "Create Location",
+                "operationId": "create_location_api_locations_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LocationIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LocationOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/locations/{location_id}": {
+            "delete": {
+                "tags": [
+                    "Залы",
+                    "Справочники"
+                ],
+                "summary": "Delete Location",
+                "operationId": "delete_location_api_locations__location_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "location_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Location Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/amenities": {
+            "get": {
+                "tags": [
+                    "Залы",
+                    "Справочники"
+                ],
+                "summary": "List Amenities",
+                "operationId": "list_amenities_api_amenities_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/AmenityOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response List Amenities Api Amenities Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Залы",
+                    "Справочники"
+                ],
+                "summary": "Create Amenity",
+                "operationId": "create_amenity_api_amenities_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AmenityIn"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AmenityOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings": {
+            "post": {
+                "tags": [
+                    "Бронирования"
+                ],
+                "summary": "Create Booking",
+                "description": "Гость создаёт заявку (pending), сотрудник и админ — сразу подтверждённую бронь.",
+                "operationId": "create_booking_api_bookings_post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookingIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookingOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Бронирования"
+                ],
+                "summary": "List Bookings",
+                "operationId": "list_bookings_api_bookings_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "mine",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "description": "Только мои брони. Админ может передать false",
+                            "default": true,
+                            "title": "Mine"
+                        },
+                        "description": "Только мои брони. Админ может передать false"
+                    },
+                    {
+                        "name": "room_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Room Id"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "User Id"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/BookingStatus"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Status"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "maxLength": 100
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Search"
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Date From"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Date To"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "start_at | created_at | title | status, «-» — по убыванию",
+                            "title": "Sort"
+                        },
+                        "description": "start_at | created_at | title | status, «-» — по убыванию"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Size"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Page_BookingOut_"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/bookings/export.xlsx": {
+            "get": {
+                "tags": [
+                    "Бронирования"
+                ],
+                "summary": "Export Bookings",
+                "description": "Экспорт в Excel. Админ получает все брони, остальные — только свои.",
+                "operationId": "export_bookings_api_bookings_export_xlsx_get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/BookingStatus"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Status"
+                        }
+                    },
+                    {
+                        "name": "room_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Room Id"
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Date From"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Date To"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/bookings/{booking_id}": {
+            "get": {
+                "tags": [
+                    "Бронирования"
+                ],
+                "summary": "Get Booking",
+                "operationId": "get_booking_api_bookings__booking_id__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "booking_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Booking Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookingOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/bookings/{booking_id}/status": {
+            "patch": {
+                "tags": [
+                    "Бронирования"
+                ],
+                "summary": "Change Status",
+                "description": "Владелец может отменить свою бронь. Админ — подтвердить, отклонить или отменить любую.",
+                "operationId": "change_status_api_bookings__booking_id__status_patch",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "booking_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Booking Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookingStatusIn"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookingOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/dashboard": {
+            "get": {
+                "tags": [
+                    "Бронирования",
+                    "Администрирование"
+                ],
+                "summary": "Dashboard",
+                "operationId": "dashboard_api_admin_dashboard_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DashboardOut"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/health": {
+            "get": {
+                "tags": [
+                    "Служебное"
+                ],
+                "summary": "Health",
+                "operationId": "health_api_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AdminUserUpdateIn": {
+                "properties": {
+                    "role": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Role"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "is_blocked": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Is Blocked"
+                    }
+                },
+                "type": "object",
+                "title": "AdminUserUpdateIn"
+            },
+            "AmenityIn": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 80,
+                        "minLength": 2,
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "AmenityIn"
+            },
+            "AmenityOut": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "title": "AmenityOut"
+            },
+            "AuditOut": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "action": {
+                        "type": "string",
+                        "title": "Action"
+                    },
+                    "entity": {
+                        "type": "string",
+                        "title": "Entity"
+                    },
+                    "entity_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Entity Id"
+                    },
+                    "details": {
+                        "type": "object",
+                        "title": "Details"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "user": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/BookingUserOut"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "action",
+                    "entity",
+                    "entity_id",
+                    "details",
+                    "created_at",
+                    "user"
+                ],
+                "title": "AuditOut"
+            },
+            "Body_upload_photo_api_rooms__room_id__photos_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File",
+                        "description": "JPG / PNG / WEBP, до 5 МБ"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_upload_photo_api_rooms__room_id__photos_post"
+            },
+            "BookingIn": {
+                "properties": {
+                    "room_id": {
+                        "type": "integer",
+                        "title": "Room Id"
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 200,
+                        "minLength": 2,
+                        "title": "Title"
+                    },
+                    "start_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Start At"
+                    },
+                    "end_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "End At"
+                    },
+                    "attendees": {
+                        "type": "integer",
+                        "maximum": 500.0,
+                        "minimum": 1.0,
+                        "title": "Attendees",
+                        "default": 1
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "room_id",
+                    "title",
+                    "start_at",
+                    "end_at"
+                ],
+                "title": "BookingIn"
+            },
+            "BookingOut": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "start_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Start At"
+                    },
+                    "end_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "End At"
+                    },
+                    "attendees": {
+                        "type": "integer",
+                        "title": "Attendees"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/BookingStatus"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "room": {
+                        "$ref": "#/components/schemas/BookingRoomOut"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/BookingUserOut"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "title",
+                    "start_at",
+                    "end_at",
+                    "attendees",
+                    "status",
+                    "created_at",
+                    "room",
+                    "user"
+                ],
+                "title": "BookingOut"
+            },
+            "BookingRoomOut": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "title": "BookingRoomOut"
+            },
+            "BookingStatus": {
+                "type": "string",
+                "enum": [
+                    "pending",
+                    "confirmed",
+                    "rejected",
+                    "cancelled"
+                ],
+                "title": "BookingStatus"
+            },
+            "BookingStatusIn": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/BookingStatus"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "status"
+                ],
+                "title": "BookingStatusIn"
+            },
+            "BookingUserOut": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "full_name": {
+                        "type": "string",
+                        "title": "Full Name"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "full_name",
+                    "email"
+                ],
+                "title": "BookingUserOut"
+            },
+            "ChangePasswordIn": {
+                "properties": {
+                    "old_password": {
+                        "type": "string",
+                        "title": "Old Password"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "maxLength": 72,
+                        "minLength": 8,
+                        "title": "New Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "old_password",
+                    "new_password"
+                ],
+                "title": "ChangePasswordIn"
+            },
+            "DashboardOut": {
+                "properties": {
+                    "total_rooms": {
+                        "type": "integer",
+                        "title": "Total Rooms"
+                    },
+                    "total_users": {
+                        "type": "integer",
+                        "title": "Total Users"
+                    },
+                    "bookings_today": {
+                        "type": "integer",
+                        "title": "Bookings Today"
+                    },
+                    "pending_count": {
+                        "type": "integer",
+                        "title": "Pending Count"
+                    },
+                    "by_day": {
+                        "items": {
+                            "$ref": "#/components/schemas/DayCount"
+                        },
+                        "type": "array",
+                        "title": "By Day"
+                    },
+                    "top_rooms": {
+                        "items": {
+                            "$ref": "#/components/schemas/RoomCount"
+                        },
+                        "type": "array",
+                        "title": "Top Rooms"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "total_rooms",
+                    "total_users",
+                    "bookings_today",
+                    "pending_count",
+                    "by_day",
+                    "top_rooms"
+                ],
+                "title": "DashboardOut"
+            },
+            "DayCount": {
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "title": "Day"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "title": "Count"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "day",
+                    "count"
+                ],
+                "title": "DayCount"
+            },
+            "ForgotPasswordIn": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email"
+                ],
+                "title": "ForgotPasswordIn"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "LocationIn": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 120,
+                        "minLength": 2,
+                        "title": "Name"
+                    },
+                    "address": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 3,
+                        "title": "Address"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "address"
+                ],
+                "title": "LocationIn"
+            },
+            "LocationOut": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "address": {
+                        "type": "string",
+                        "title": "Address"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "address"
+                ],
+                "title": "LocationOut"
+            },
+            "LoginIn": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "title": "LoginIn"
+            },
+            "Page_AuditOut_": {
+                "properties": {
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/AuditOut"
+                        },
+                        "type": "array",
+                        "title": "Items"
+                    },
+                    "total": {
+                        "type": "integer",
+                        "title": "Total"
+                    },
+                    "page": {
+                        "type": "integer",
+                        "title": "Page"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "title": "Size"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "size"
+                ],
+                "title": "Page[AuditOut]"
+            },
+            "Page_BookingOut_": {
+                "properties": {
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/BookingOut"
+                        },
+                        "type": "array",
+                        "title": "Items"
+                    },
+                    "total": {
+                        "type": "integer",
+                        "title": "Total"
+                    },
+                    "page": {
+                        "type": "integer",
+                        "title": "Page"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "title": "Size"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "size"
+                ],
+                "title": "Page[BookingOut]"
+            },
+            "Page_RoomOut_": {
+                "properties": {
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/RoomOut"
+                        },
+                        "type": "array",
+                        "title": "Items"
+                    },
+                    "total": {
+                        "type": "integer",
+                        "title": "Total"
+                    },
+                    "page": {
+                        "type": "integer",
+                        "title": "Page"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "title": "Size"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "size"
+                ],
+                "title": "Page[RoomOut]"
+            },
+            "Page_UserOut_": {
+                "properties": {
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/UserOut"
+                        },
+                        "type": "array",
+                        "title": "Items"
+                    },
+                    "total": {
+                        "type": "integer",
+                        "title": "Total"
+                    },
+                    "page": {
+                        "type": "integer",
+                        "title": "Page"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "title": "Size"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "size"
+                ],
+                "title": "Page[UserOut]"
+            },
+            "ProfileUpdateIn": {
+                "properties": {
+                    "full_name": {
+                        "type": "string",
+                        "maxLength": 120,
+                        "minLength": 2,
+                        "title": "Full Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "full_name"
+                ],
+                "title": "ProfileUpdateIn"
+            },
+            "RefreshIn": {
+                "properties": {
+                    "refresh_token": {
+                        "type": "string",
+                        "title": "Refresh Token"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "refresh_token"
+                ],
+                "title": "RefreshIn"
+            },
+            "RegisterIn": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "maxLength": 72,
+                        "minLength": 8,
+                        "title": "Password"
+                    },
+                    "full_name": {
+                        "type": "string",
+                        "maxLength": 120,
+                        "minLength": 2,
+                        "title": "Full Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email",
+                    "password",
+                    "full_name"
+                ],
+                "title": "RegisterIn"
+            },
+            "ResetPasswordIn": {
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Token"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "maxLength": 72,
+                        "minLength": 8,
+                        "title": "New Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "token",
+                    "new_password"
+                ],
+                "title": "ResetPasswordIn"
+            },
+            "Role": {
+                "type": "string",
+                "enum": [
+                    "guest",
+                    "employee",
+                    "admin"
+                ],
+                "title": "Role"
+            },
+            "RoomCount": {
+                "properties": {
+                    "room": {
+                        "type": "string",
+                        "title": "Room"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "title": "Count"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "room",
+                    "count"
+                ],
+                "title": "RoomCount"
+            },
+            "RoomIn": {
+                "properties": {
+                    "location_id": {
+                        "type": "integer",
+                        "title": "Location Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 120,
+                        "minLength": 2,
+                        "title": "Name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 2000,
+                        "title": "Description",
+                        "default": ""
+                    },
+                    "capacity": {
+                        "type": "integer",
+                        "maximum": 500.0,
+                        "minimum": 1.0,
+                        "title": "Capacity"
+                    },
+                    "floor": {
+                        "type": "integer",
+                        "maximum": 200.0,
+                        "minimum": -5.0,
+                        "title": "Floor",
+                        "default": 1
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "title": "Is Active",
+                        "default": true
+                    },
+                    "amenity_ids": {
+                        "items": {
+                            "type": "integer"
+                        },
+                        "type": "array",
+                        "title": "Amenity Ids",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "location_id",
+                    "name",
+                    "capacity"
+                ],
+                "title": "RoomIn"
+            },
+            "RoomOut": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "capacity": {
+                        "type": "integer",
+                        "title": "Capacity"
+                    },
+                    "floor": {
+                        "type": "integer",
+                        "title": "Floor"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "title": "Is Active"
+                    },
+                    "location": {
+                        "$ref": "#/components/schemas/LocationOut"
+                    },
+                    "amenities": {
+                        "items": {
+                            "$ref": "#/components/schemas/AmenityOut"
+                        },
+                        "type": "array",
+                        "title": "Amenities"
+                    },
+                    "photos": {
+                        "items": {
+                            "$ref": "#/components/schemas/RoomPhotoOut"
+                        },
+                        "type": "array",
+                        "title": "Photos"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "capacity",
+                    "floor",
+                    "is_active",
+                    "location",
+                    "amenities",
+                    "photos"
+                ],
+                "title": "RoomOut"
+            },
+            "RoomPhotoOut": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "file_name": {
+                        "type": "string",
+                        "title": "File Name"
+                    },
+                    "url": {
+                        "type": "string",
+                        "title": "Url",
+                        "default": ""
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "file_name"
+                ],
+                "title": "RoomPhotoOut"
+            },
+            "SlotOut": {
+                "properties": {
+                    "start_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Start At"
+                    },
+                    "end_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "End At"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/BookingStatus"
+                    },
+                    "mine": {
+                        "type": "boolean",
+                        "title": "Mine",
+                        "default": false
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "start_at",
+                    "end_at",
+                    "status"
+                ],
+                "title": "SlotOut",
+                "description": "Занятый интервал в календаре зала (без личных данных — видят все)."
+            },
+            "TokenPair": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "title": "Access Token"
+                    },
+                    "refresh_token": {
+                        "type": "string",
+                        "title": "Refresh Token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "title": "Token Type",
+                        "default": "bearer"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "access_token",
+                    "refresh_token"
+                ],
+                "title": "TokenPair"
+            },
+            "UserOut": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "full_name": {
+                        "type": "string",
+                        "title": "Full Name"
+                    },
+                    "role": {
+                        "$ref": "#/components/schemas/Role"
+                    },
+                    "is_blocked": {
+                        "type": "boolean",
+                        "title": "Is Blocked"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "email",
+                    "full_name",
+                    "role",
+                    "is_blocked",
+                    "created_at"
+                ],
+                "title": "UserOut"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
