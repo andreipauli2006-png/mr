@@ -1,0 +1,25 @@
+# Деплой на Render.com (бесплатный тариф): New → Blueprint → выбрать этот репозиторий
+services:
+  - type: web
+    name: meetspace
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: meetspace-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://meetspace.onrender.com
+      - key: FRONTEND_URL
+        value: https://meetspace.onrender.com
+
+databases:
+  - name: meetspace-db
+    plan: free
+    databaseName: booking
+    user: app
