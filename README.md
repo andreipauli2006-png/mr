@@ -10,6 +10,8 @@ Fullstack веб-приложение для бронирования перег
 - **Публичная ссылка: https://meetspace-xgyx.onrender.com**
 - Документация API (Swagger): https://meetspace-xgyx.onrender.com/api/docs
 - Репозиторий: https://github.com/andreipauli2006-png/mr
+- Канбан-доска: https://github.com/users/andreipauli2006-png/projects/1
+- Презентация и демо: `docs/demo-script.md`, экраны — `docs/screens/`
 
 ## Роли
 
