@@ -39,6 +39,41 @@ services:
     depends_on:
       - backend
 
+  # ---------- Тесты (запускаются только вручную) ----------
+  # Бэкенд:  docker compose run --rm tests
+  # Фронтенд: docker compose run --rm tests-frontend
+  test-db:
+    image: postgres:16-alpine
+    profiles: ["test"]
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: booking_test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d booking_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  tests:
+    build: ./backend
+    profiles: ["test"]
+    environment:
+      TEST_DATABASE_URL: postgresql+psycopg://app:app@test-db:5432/booking_test
+    command: sh -c "pip install -q -r requirements-dev.txt && pytest -v --cov=app/services --cov-report=term"
+    depends_on:
+      test-db:
+        condition: service_healthy
+
+  tests-frontend:
+    image: node:22-alpine
+    profiles: ["test"]
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm ci && npm test"
+
 volumes:
   pgdata:
   uploads:

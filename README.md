@@ -87,6 +87,15 @@ npm run dev                      # http://localhost:5173
 
 ## Тесты
 
+**Проще всего — через Docker, одной командой** (нужен только Docker Desktop):
+
+```bash
+docker compose run --rm tests            # 48 тестов бэкенда + покрытие
+docker compose run --rm tests-frontend   # 18 тестов фронтенда
+```
+
+Без Docker:
+
 ```bash
 # бэкенд: unit + интеграционные (нужна тестовая БД booking_test)
 cd backend
